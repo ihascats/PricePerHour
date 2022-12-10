@@ -15,3 +15,7 @@
 .loading {
   animation: spin 2s backwards infinite;
 }
+
+body {
+  background-color: rgb(59, 59, 59);
+}

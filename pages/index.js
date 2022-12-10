@@ -73,6 +73,7 @@ export default function Steam() {
             className="border-b-2 border-neutral-400 text-neutral-400 bg-transparent outline-offset-4 px-1 w-full"
             onKeyUp={(event) => {
               if (event.key === 'Enter') {
+                if (loading) return;
                 event.preventDefault();
                 getHltbTitles();
                 getSteamTitles();
@@ -82,6 +83,7 @@ export default function Steam() {
           ></input>
           <button
             onClick={() => {
+              if (loading) return;
               getHltbTitles();
               getSteamTitles();
               setLoading(true);
