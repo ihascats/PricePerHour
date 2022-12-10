@@ -1,6 +1,7 @@
 import PriceDisplay from './priceDisplay';
 import { currencies } from '../data/currencies';
 import { useRef } from 'react';
+import ExchangeRate from './exchangeRate';
 
 export default function GameSelect({
   hltbOptions,
@@ -21,18 +22,14 @@ export default function GameSelect({
           onChange={() => {
             getPrice(
               steamOptions[steamGame.current.value].appid,
-              currency.current.value,
+              currency.current.value.slice(0, 2),
             );
           }}
           className="bg-transparent border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"
-          defaultValue="US"
+          defaultValue="USD"
         >
           {currencies.map((currency, index) => (
-            <option
-              className="bg-neutral-900"
-              key={currency}
-              value={currency.slice(0, 2)}
-            >
+            <option className="bg-neutral-900" key={currency} value={currency}>
               {currency}
             </option>
           ))}
@@ -62,7 +59,7 @@ export default function GameSelect({
           onChange={(event) => {
             getPrice(
               steamOptions[event.target.value].appid,
-              currency.current.value,
+              currency.current.value.slice(0, 2),
             );
             setSteamImage(steamOptions[event.target.value].appid);
           }}
@@ -81,6 +78,7 @@ export default function GameSelect({
             : null}
         </select>
       </label>
+      <ExchangeRate price={price} exchangeCurr={currency} />
       <PriceDisplay price={price} />
     </div>
   );
