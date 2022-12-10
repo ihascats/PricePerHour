@@ -14,7 +14,15 @@ export default function Steam() {
       const json = await response.json();
       setPrice(json);
     } catch (error) {
-      console.error(error);
+      const obj = {
+        currency: 'EUR',
+        initial: 0,
+        final: 0,
+        discount_percent: 0,
+        initial_formatted: '',
+        final_formatted: 'Free',
+      };
+      setPrice(obj);
     }
   }
 
@@ -47,16 +55,24 @@ export default function Steam() {
   return (
     <div className="flex justify-center">
       <div className="flex flex-col-reverse w-full max-w-[500px] min-h-screen bg-neutral-800 border-x-2 border-neutral-900">
-        <div className="flex bg-neutral-700 p-2 gap-2 items-center justify-center">
+        <div className="flex bg-neutral-900 p-2 gap-2 items-center justify-center sticky bottom-0">
           <input
             ref={gameTitle}
-            className="border-b-2 border-neutral-900 bg-transparent outline-offset-4 px-1 w-full"
+            className="border-b-2 border-neutral-400 text-neutral-400 bg-transparent outline-offset-4 px-1 w-full"
+            onKeyUp={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                getHltbTitles();
+                getSteamTitles();
+              }
+            }}
           ></input>
           <button
             onClick={() => {
               getHltbTitles();
               getSteamTitles();
             }}
+            className="text-neutral-400"
           >
             Find
           </button>
