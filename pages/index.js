@@ -46,7 +46,7 @@ export default function Steam() {
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col-reverse w-full h-screen max-w-[500px] border-x-2 border-neutral-900">
+      <div className="flex flex-col-reverse w-full max-w-[500px] min-h-screen bg-neutral-800 border-x-2 border-neutral-900">
         <div className="flex bg-neutral-700 p-2 gap-2 items-center justify-center">
           <input
             ref={gameTitle}
@@ -74,23 +74,29 @@ export default function Steam() {
         ) : null}
         <Platforms hltbSelected={hltbSelected} />
         {steamImage ? (
-          <img
-            alt=""
-            src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamImage}/header.jpg`}
-            className=" w-64 p-3 bg-zinc-800 my-3"
-          ></img>
-        ) : (
-          <div className="w-64 aspect-video bg-zinc-800 my-3"></div>
-        )}
+          <div className="bg-neutral-800 font-mono text-neutral-50 p-2">
+            <p>Steam Image:</p>
+            <div className="max-h-[230px] grid justify-center bg-neutral-800">
+              <img
+                alt=""
+                src={`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamImage}/header.jpg`}
+                className=" bg-zinc-800 w-full"
+              ></img>
+            </div>
+          </div>
+        ) : null}
         {hltbSelected ? (
-          <img
-            alt=""
-            src={hltbSelected.imageUrl}
-            className=" w-64 p-3 bg-zinc-800 my-3"
-          ></img>
-        ) : (
-          <div className="w-64 aspect-video bg-zinc-800 my-3"></div>
-        )}
+          <div className="bg-neutral-800 font-mono text-neutral-50 p-2">
+            <p>How Long To Beat Image:</p>
+            <div className="max-h-[230px] grid justify-center bg-neutral-800">
+              <img
+                alt=""
+                src={hltbSelected.imageUrl}
+                className="bg-zinc-800 max-h-[230px]"
+              ></img>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );
