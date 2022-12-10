@@ -1,4 +1,6 @@
 import PriceDisplay from './priceDisplay';
+import { currencies } from '../data/currencies';
+import { useRef } from 'react';
 
 export default function GameSelect({
   hltbOptions,
@@ -8,8 +10,34 @@ export default function GameSelect({
   setSteamImage,
   setHltbSelected,
 }) {
+  const currency = useRef();
+  const steamGame = useRef();
   return (
     <div className="p-2 bg-neutral-800 text-neutral-400 flex flex-col-reverse gap-3">
+      <label className="flex flex-col font-mono text-sm">
+        Currency ({currencies.length})
+        <select
+          ref={currency}
+          onChange={() => {
+            getPrice(
+              steamOptions[steamGame.current.value].appid,
+              currency.current.value,
+            );
+          }}
+          className="bg-transparent border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"
+          defaultValue="US"
+        >
+          {currencies.map((currency, index) => (
+            <option
+              className="bg-neutral-900"
+              key={currency}
+              value={currency.slice(0, 2)}
+            >
+              {currency}
+            </option>
+          ))}
+        </select>
+      </label>
       <label className="flex flex-col font-mono text-sm">
         How long to beat{hltbOptions ? ` (${hltbOptions.length})` : null}:
         <select
@@ -30,8 +58,12 @@ export default function GameSelect({
       <label className="flex flex-col font-mono text-sm">
         Steam{steamOptions ? ` (${steamOptions.length})` : null}:
         <select
+          ref={steamGame}
           onChange={(event) => {
-            getPrice(steamOptions[event.target.value].appid);
+            getPrice(
+              steamOptions[event.target.value].appid,
+              currency.current.value,
+            );
             setSteamImage(steamOptions[event.target.value].appid);
           }}
           className="bg-transparent border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"

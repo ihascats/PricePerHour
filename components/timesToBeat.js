@@ -8,21 +8,18 @@ export default function TimesToBeat({ hltbSelected, price }) {
         <p className="text-red-400 w-fit">Main:</p>
         <p className="text-red-400">{gameplayMain}h</p>
         <p className="text-red-400">
-          {final_formatted[0]}
           {(initial / (gameplayMain * 100)).toFixed(2)}/h
         </p>
 
         <p className="text-yellow-400 w-fit">Main+:</p>
         <p className="text-yellow-400">{gameplayMainExtra}h</p>
         <p className="text-yellow-400">
-          {final_formatted[0]}
           {(initial / (gameplayMainExtra * 100)).toFixed(2)}/h
         </p>
 
         <p className="text-green-400 w-fit">100%:</p>
         <p className="text-green-400">{gameplayCompletionist}h</p>
         <p className="text-green-400">
-          {final_formatted[0]}
           {(initial / (gameplayCompletionist * 100)).toFixed(2)}/h
         </p>
       </div>

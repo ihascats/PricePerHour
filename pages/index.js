@@ -4,9 +4,9 @@ import TimesToBeat from '../components/timesToBeat';
 import steamGames from '../data/games.json';
 
 export default function Steam() {
-  async function getPrice(appid) {
+  async function getPrice(appid, currency) {
     try {
-      const response = await fetch(`/api/steam/${appid}?currency=US`, {
+      const response = await fetch(`/api/steam/${appid}?currency=${currency}`, {
         method: 'GET',
       });
 
