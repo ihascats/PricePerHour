@@ -1,14 +1,15 @@
 import { useRef, useState } from 'react';
 import GameSelect from '../components/gameSelect';
+import Platforms from '../components/platforms';
 import TimesToBeat from '../components/timesToBeat';
 import steamGames from '../data/games.json';
 
 export default function Steam() {
   async function getPrice(appid, currency) {
     try {
-      const response = await fetch(`/api/steam/${appid}?currency=${currency}`, {
-        method: 'GET',
-      });
+      const response = await fetch(
+        `/api/steam/${appid}?currency=${currency === 'EU' ? 'EUR' : currency}`,
+      );
 
       const json = await response.json();
       setPrice(json);
@@ -19,9 +20,7 @@ export default function Steam() {
 
   async function getHltbTitles() {
     if (gameTitle.current.value.length < 3) return;
-    const response = await fetch(`/api/hltb/${gameTitle.current.value}`, {
-      method: 'GET',
-    });
+    const response = await fetch(`/api/hltb/${gameTitle.current.value}`);
     const json = await response.json();
     setHltbOptions(json.response);
     setHltbSelected(json.response[0]);
@@ -73,6 +72,7 @@ export default function Steam() {
         {hltbSelected && price ? (
           <TimesToBeat hltbSelected={hltbSelected} price={price} />
         ) : null}
+        <Platforms hltbSelected={hltbSelected} />
         {steamImage ? (
           <img
             alt=""
