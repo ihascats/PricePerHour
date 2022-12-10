@@ -4,6 +4,7 @@ import Icons from '../components/icons';
 import Platforms from '../components/platforms';
 import TimesToBeat from '../components/timesToBeat';
 import steamGames from '../data/games.json';
+import Head from 'next/head';
 
 export default function Steam() {
   async function getPrice(appid, currency) {
@@ -59,6 +60,10 @@ export default function Steam() {
 
   return (
     <div className="flex justify-center">
+      <Head>
+        <title>Price Per Hour</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       {loading ? (
         <div className="max-w-[500px] top-0 min-h-screen w-full bg-neutral-600/20 backdrop-blur-md border-x-2 border-neutral-900 flex flex-col text-neutral-400 justify-center items-center fixed">
           {icons.loading}
