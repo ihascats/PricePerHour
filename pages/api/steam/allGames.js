@@ -3,10 +3,6 @@ const fs = require('fs');
 export default async function handler(req, res) {
   const response = await fetch(
     `http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json`,
-    {
-      method: 'GET',
-      mode: 'cors',
-    },
   );
   if (response.status === 200) {
     const json = await response.json(); //extract JSON from the http response
