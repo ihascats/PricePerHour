@@ -10,12 +10,12 @@ export default function GameSelect({
   getPrice,
   setSteamImage,
   setHltbSelected,
+  currency,
 }) {
   function updateCatalogue() {
     fetch(`/api/steam/allGames`);
   }
 
-  const currency = useRef();
   const steamGame = useRef();
   return (
     <div className="p-2 bg-neutral-800 text-neutral-400 flex flex-col-reverse gap-3">
@@ -23,10 +23,10 @@ export default function GameSelect({
         Currency ({currencies.length})
         <select
           ref={currency}
-          onChange={() => {
+          onChange={(event) => {
             getPrice(
               steamOptions[steamGame.current.value].appid,
-              currency.current.value.slice(0, 2),
+              event.target.value.slice(0, 2),
             );
           }}
           className="bg-transparent border-b-2 border-neutral-400 text-neutral-50 font-sans text-base"

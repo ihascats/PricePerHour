@@ -39,7 +39,7 @@ export default function Steam() {
     setLoading(false);
   }
 
-  async function getSteamTitles() {
+  async function getSteamTitles(currency) {
     if (gameTitle.current.value.length < 3) return;
     const result = steamGames.filter((obj) => {
       return obj.name
@@ -48,7 +48,7 @@ export default function Steam() {
     });
     if (result.length === 0) return;
     setSteamOptions(result);
-    getPrice(result[0].appid);
+    getPrice(result[0].appid, currency);
     setSteamImage(result[0].appid);
   }
   const [price, setPrice] = useState();
@@ -59,6 +59,7 @@ export default function Steam() {
   const [loading, setLoading] = useState(false);
   const gameTitle = useRef();
   const icons = Icons();
+  const currency = useRef();
 
   return (
     <div className="flex justify-center">
@@ -83,7 +84,7 @@ export default function Steam() {
                 if (loading) return;
                 event.preventDefault();
                 getHltbTitles();
-                getSteamTitles();
+                getSteamTitles(currency.current.value.slice(0, 2));
                 setLoading(true);
               }
             }}
@@ -92,7 +93,7 @@ export default function Steam() {
             onClick={() => {
               if (loading) return;
               getHltbTitles();
-              getSteamTitles();
+              getSteamTitles(currency.current.value.slice(0, 2));
               setLoading(true);
             }}
             className="text-neutral-400"
@@ -107,6 +108,7 @@ export default function Steam() {
           getPrice={getPrice}
           setSteamImage={setSteamImage}
           setHltbSelected={setHltbSelected}
+          currency={currency}
         />
         {hltbSelected && price ? (
           <TimesToBeat hltbSelected={hltbSelected} price={price} />
