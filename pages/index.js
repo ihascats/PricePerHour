@@ -10,7 +10,9 @@ export default function Steam() {
   async function getPrice(appid, currency) {
     try {
       const response = await fetch(
-        `/api/steam/${appid}?currency=${currency === 'EU' ? 'EUR' : currency}`,
+        `/api/steam/${appid}?currency=${
+          currency === 'EU' || currency === 'eu' ? 'EUR' : currency
+        }`,
       );
 
       const json = await response.json();
