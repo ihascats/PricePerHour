@@ -11,7 +11,7 @@ export default function Steam() {
     try {
       const response = await fetch(
         `/api/steam/${appid}?currency=${
-          currency === 'EU' || currency === 'eu' ? 'EUR' : currency
+          currency === 'EU' || currency === 'eu' ? 'eur' : currency
         }`,
       );
 
