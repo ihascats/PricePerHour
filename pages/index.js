@@ -34,6 +34,7 @@ export default function Steam() {
     if (gameTitle.current.value.length < 3) return;
     const response = await fetch(`/api/hltb/${gameTitle.current.value}`);
     const json = await response.json();
+    json.response.sort((a, b) => a.name.length - b.name.length);
     setHltbOptions(json.response);
     setHltbSelected(json.response[0]);
     setLoading(false);
@@ -46,6 +47,7 @@ export default function Steam() {
         .toLowerCase()
         .includes(gameTitle.current.value.toLowerCase());
     });
+    result.sort((a, b) => a.name.length - b.name.length);
     if (result.length === 0) return;
     setSteamOptions(result);
     getPrice(result[0].appid, currency);
