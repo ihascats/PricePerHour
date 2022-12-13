@@ -8,16 +8,28 @@ import Head from 'next/head';
 
 export default function Steam() {
   async function getPrice(appid, currency) {
+    // Try to fetch the price data from the Steam API
     try {
+      // Set loading to true
+      setLoading(true);
+
+      // Fetch the price data, passing the app ID and currency to the API
       const response = await fetch(
         `/api/steam/${appid}?currency=${
           currency === 'EU' || currency === 'eu' ? 'eur' : currency
         }`,
       );
 
+      // Convert the response to JSON
       const json = await response.json();
+
+      // Set the state for the price data
       setPrice(json);
+
+      // Set loading to false
+      setLoading(false);
     } catch (error) {
+      // If an error occurs, set the price data to default values and set loading to false
       const obj = {
         currency: 'EUR',
         initial: 0,
@@ -27,32 +39,55 @@ export default function Steam() {
         final_formatted: 'Free',
       };
       setPrice(obj);
+      setLoading(false);
     }
   }
 
-  async function getHltbTitles() {
+  async function getTitles(currency) {
+    // If the length of the search term is less than 3 characters, exit the function
     if (gameTitle.current.value.length < 3) return;
-    const response = await fetch(`/api/hltb/${gameTitle.current.value}`);
-    const json = await response.json();
-    json.response.sort((a, b) => a.name.length - b.name.length);
-    setHltbOptions(json.response);
-    setHltbSelected(json.response[0]);
-    setLoading(false);
-  }
 
-  async function getSteamTitles(currency) {
-    if (gameTitle.current.value.length < 3) return;
-    const result = steamGames.filter((obj) => {
+    // Set loading to true
+    setLoading(true);
+
+    // Fetch game data from the HLTB API using the search term
+    const hltbFetch = await fetch(`/api/hltb/${gameTitle.current.value}`);
+
+    // Filter the Steam games array to find matches for the search term
+    const steamGameFilter = steamGames.filter((obj) => {
       return obj.name
         .toLowerCase()
         .includes(gameTitle.current.value.toLowerCase());
     });
-    result.sort((a, b) => a.name.length - b.name.length);
-    if (result.length === 0) return;
-    setSteamOptions(result);
-    getPrice(result[0].appid, currency);
-    setSteamImage(result[0].appid);
+
+    // If no matches are found, exit the function
+    if (steamGameFilter.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    // Convert the HLTB data to JSON
+    const hltbJson = await hltbFetch.json();
+
+    // Sort the HLTB data alphabetically by game title
+    hltbJson.response.sort((a, b) => a.name.length - b.name.length);
+
+    // Set the state for the HLTB options and selected game
+    setHltbOptions(hltbJson.response);
+    setHltbSelected(hltbJson.response[0]);
+
+    // Sort the filtered Steam games alphabetically by game title
+    steamGameFilter.sort((a, b) => a.name.length - b.name.length);
+
+    // Set the state for the Steam options, fetch the price data, and set the image for the selected game
+    setSteamOptions(steamGameFilter);
+    setSteamImage(steamGameFilter[0].appid);
+    getPrice(steamGameFilter[0].appid, currency);
+
+    // Set loading to false
+    setLoading(false);
   }
+
   const [price, setPrice] = useState();
   const [hltbOptions, setHltbOptions] = useState();
   const [hltbSelected, setHltbSelected] = useState();
@@ -85,18 +120,14 @@ export default function Steam() {
               if (event.key === 'Enter') {
                 if (loading) return;
                 event.preventDefault();
-                getHltbTitles();
-                getSteamTitles(currency.current.value.slice(0, 2));
-                setLoading(true);
+                getTitles(currency.current.value.slice(0, 2));
               }
             }}
           ></input>
           <button
             onClick={() => {
               if (loading) return;
-              getHltbTitles();
-              getSteamTitles(currency.current.value.slice(0, 2));
-              setLoading(true);
+              getTitles(currency.current.value.slice(0, 2));
             }}
             className="text-neutral-400"
           >
