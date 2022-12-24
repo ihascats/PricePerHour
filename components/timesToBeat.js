@@ -1,7 +1,7 @@
 export default function TimesToBeat({ hltbSelected, price }) {
   const { gameplayMain, gameplayMainExtra, gameplayCompletionist } =
     hltbSelected;
-  const { initial, final_formatted } = price;
+  const { initial } = price;
   return (
     <div className="flex p-2 bg-neutral-800 border-b-2 border-b-neutral-500 text-neutral-50 font-mono">
       <div className="grid grid-cols-3 w-full whitespace-nowrap gap-x-2">
