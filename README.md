@@ -1,5 +1,7 @@
 # Welcome to <a href='https://priceperhour.vercel.app/'>PricePerHour</a>
 
+<img src="https://img.shields.io/badge/Next.js-3C005A?style=for-the-badge&logo=next.js&logoColor=white" height=30>
+
 <p>Easily compare the cost of different games and make an informed decision about which ones are worth your time and money.</p>
 
 ### Features
