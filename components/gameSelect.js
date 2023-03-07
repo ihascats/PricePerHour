@@ -12,10 +12,6 @@ export default function GameSelect({
   setHltbSelected,
   currency,
 }) {
-  function updateCatalogue() {
-    fetch(`/api/steam/allGames`);
-  }
-
   const steamGame = useRef();
   return (
     <div className="p-2 bg-neutral-800 text-neutral-400 flex flex-col-reverse gap-3">
@@ -56,14 +52,6 @@ export default function GameSelect({
             : null}
         </select>
       </label>
-      <div className="flex justify-end">
-        <button
-          onClick={updateCatalogue}
-          className="bg-neutral-600 rounded-lg text-neutral-300 p-1 px-3 w-fit"
-        >
-          update steam games catalogue
-        </button>
-      </div>
       <label className="flex flex-col font-mono text-sm">
         Steam{steamOptions ? ` (${steamOptions.length})` : null}:
         <select

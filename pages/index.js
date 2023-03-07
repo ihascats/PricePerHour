@@ -1,9 +1,8 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import GameSelect from '../components/gameSelect';
 import Icons from '../components/icons';
 import Platforms from '../components/platforms';
 import TimesToBeat from '../components/timesToBeat';
-import steamGames from '../data/games.json';
 import Head from 'next/head';
 
 export default function Steam() {
@@ -11,7 +10,7 @@ export default function Steam() {
     // Try to fetch the price data from the Steam API
     try {
       // Set loading to true
-      setLoading(true);
+      setIsLoading(true);
 
       // Fetch the price data, passing the app ID and currency to the API
       const response = await fetch(
@@ -27,7 +26,7 @@ export default function Steam() {
       setPrice(json);
 
       // Set loading to false
-      setLoading(false);
+      setIsLoading(false);
     } catch (error) {
       // If an error occurs, set the price data to default values and set loading to false
       const obj = {
@@ -39,7 +38,7 @@ export default function Steam() {
         final_formatted: 'Free',
       };
       setPrice(obj);
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -48,13 +47,13 @@ export default function Steam() {
     if (gameTitle.current.value.length < 3) return;
 
     // Set loading to true
-    setLoading(true);
+    setIsLoading(true);
 
     // Fetch game data from the HLTB API using the search term
     const hltbFetch = await fetch(`/api/hltb/${gameTitle.current.value}`);
 
     // Filter the Steam games array to find matches for the search term
-    const steamGameFilter = steamGames.filter((obj) => {
+    const steamGameFilter = listSteamGames.filter((obj) => {
       return obj.name
         .toLowerCase()
         .includes(gameTitle.current.value.toLowerCase());
@@ -62,7 +61,7 @@ export default function Steam() {
 
     // If no matches are found, exit the function
     if (steamGameFilter.length === 0) {
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
 
@@ -85,7 +84,7 @@ export default function Steam() {
     getPrice(steamGameFilter[0].appid, currency);
 
     // Set loading to false
-    setLoading(false);
+    setIsLoading(false);
   }
 
   const [price, setPrice] = useState();
@@ -93,10 +92,27 @@ export default function Steam() {
   const [hltbSelected, setHltbSelected] = useState();
   const [steamOptions, setSteamOptions] = useState();
   const [steamImage, setSteamImage] = useState();
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [listSteamGames, setListSteamGames] = useState();
   const gameTitle = useRef();
   const icons = Icons();
   const currency = useRef();
+
+  async function updateCatalogue() {
+    // Get list of steam games
+    const response = await fetch(`/api/steam/allGames`);
+    const json = await response.json();
+    return json;
+  }
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    updateCatalogue().then((response) => {
+      setListSteamGames(response);
+      setIsLoading(false);
+    });
+  }, []);
 
   return (
     <div className="flex justify-center">
@@ -104,7 +120,7 @@ export default function Steam() {
         <title>Price Per Hour</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      {loading ? (
+      {isLoading ? (
         <div className="max-w-[500px] top-0 min-h-screen w-full bg-neutral-600/20 backdrop-blur-md border-x-2 border-neutral-900 flex flex-col text-neutral-400 justify-center items-center fixed">
           {icons.loading}
           <p className="font-mono">Loading game data..</p>
@@ -118,7 +134,7 @@ export default function Steam() {
             className="border-b-2 border-neutral-400 text-neutral-400 bg-transparent outline-offset-4 px-1 w-full"
             onKeyUp={(event) => {
               if (event.key === 'Enter') {
-                if (loading) return;
+                if (isLoading) return;
                 event.preventDefault();
                 getTitles(currency.current.value.slice(0, 2));
               }
@@ -126,7 +142,7 @@ export default function Steam() {
           ></input>
           <button
             onClick={() => {
-              if (loading) return;
+              if (isLoading) return;
               getTitles(currency.current.value.slice(0, 2));
             }}
             className="text-neutral-400"
