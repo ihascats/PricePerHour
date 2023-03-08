@@ -1,3 +1,9 @@
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+};
+
 export default async function handler(req, res) {
   const response = await fetch(
     `https://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json`,
