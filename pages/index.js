@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import GameSelect from '../components/gameSelect';
 import Icons from '../components/icons';
 import Platforms from '../components/platforms';
@@ -42,6 +42,13 @@ export default function Steam() {
     }
   }
 
+  async function findSteamMatch(title) {
+    // Get list of steam games that match the title
+    const response = await fetch(`/api/steam/allGames/${title}`);
+    const json = await response.json();
+    return json;
+  }
+
   async function getTitles(currency) {
     // If the length of the search term is less than 3 characters, exit the function
     if (gameTitle.current.value.length < 3) return;
@@ -49,40 +56,38 @@ export default function Steam() {
     // Set loading to true
     setIsLoading(true);
 
-    // Fetch game data from the HLTB API using the search term
-    const hltbFetch = await fetch(`/api/hltb/${gameTitle.current.value}`);
+    // Get an object containing an array of steam games that match the title
+    const objectAllGamesResponse = await findSteamMatch(
+      gameTitle.current.value.toLowerCase(),
+    );
 
-    // Filter the Steam games array to find matches for the search term
-    const steamGameFilter = listSteamGames.filter((obj) => {
-      return obj.name
-        .toLowerCase()
-        .includes(gameTitle.current.value.toLowerCase());
-    });
+    // If theres no results clear the window
+    if (!objectAllGamesResponse.arrayGames.length) {
+      setPrice();
+      setHltbOptions();
+      setHltbSelected();
+      setSteamOptions();
+      setSteamImage();
+    } else {
+      // Fetch game data from the HLTB API using the search term
+      const hltbFetch = await fetch(`/api/hltb/${gameTitle.current.value}`);
 
-    // If no matches are found, exit the function
-    if (steamGameFilter.length === 0) {
-      setIsLoading(false);
-      return;
+      // Convert the HLTB data to JSON
+      const hltbJson = await hltbFetch.json();
+
+      // Sort the HLTB data alphabetically by game title
+      hltbJson.response.sort((a, b) => a.name.length - b.name.length);
+
+      // Set the state for the HLTB options and selected game
+      setHltbOptions(hltbJson.response);
+      setHltbSelected(hltbJson.response[0]);
+
+      //
+      // Set the state for the Steam options, fetch the price data, and set the image for the selected game
+      setSteamOptions(objectAllGamesResponse.arrayGames);
+      setSteamImage(objectAllGamesResponse.arrayGames[0].appid);
+      getPrice(objectAllGamesResponse.arrayGames[0].appid, currency);
     }
-
-    // Convert the HLTB data to JSON
-    const hltbJson = await hltbFetch.json();
-
-    // Sort the HLTB data alphabetically by game title
-    hltbJson.response.sort((a, b) => a.name.length - b.name.length);
-
-    // Set the state for the HLTB options and selected game
-    setHltbOptions(hltbJson.response);
-    setHltbSelected(hltbJson.response[0]);
-
-    // Sort the filtered Steam games alphabetically by game title
-    steamGameFilter.sort((a, b) => a.name.length - b.name.length);
-
-    // Set the state for the Steam options, fetch the price data, and set the image for the selected game
-    setSteamOptions(steamGameFilter);
-    setSteamImage(steamGameFilter[0].appid);
-    getPrice(steamGameFilter[0].appid, currency);
-
     // Set loading to false
     setIsLoading(false);
   }
@@ -93,26 +98,10 @@ export default function Steam() {
   const [steamOptions, setSteamOptions] = useState();
   const [steamImage, setSteamImage] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const [listSteamGames, setListSteamGames] = useState();
+
   const gameTitle = useRef();
   const icons = Icons();
   const currency = useRef();
-
-  async function updateCatalogue() {
-    // Get list of steam games
-    const response = await fetch(`/api/steam/allGames`);
-    const json = await response.json();
-    return json;
-  }
-
-  useEffect(() => {
-    setIsLoading(true);
-
-    updateCatalogue().then((response) => {
-      setListSteamGames(response);
-      setIsLoading(false);
-    });
-  }, []);
 
   return (
     <div className="flex justify-center">
