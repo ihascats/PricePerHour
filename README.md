@@ -4,6 +4,8 @@
 
 <p>Easily compare the cost of different games and make an informed decision about which ones are worth your time and money.</p>
 
+_Now with better performance and less data usage!_
+
 ### Features
 
 <ul>
