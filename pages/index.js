@@ -108,6 +108,10 @@ export default function Steam() {
       <Head>
         <title>Price Per Hour</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="description"
+          content="Easily compare the cost of different games and make an informed decision about which ones are worth your time and money."
+        />
       </Head>
       {isLoading ? (
         <div className="max-w-[500px] top-0 min-h-screen w-full bg-neutral-600/20 backdrop-blur-md border-x-2 border-neutral-900 flex flex-col text-neutral-400 justify-center items-center fixed">
@@ -135,6 +139,7 @@ export default function Steam() {
               getTitles(currency.current.value.slice(0, 2));
             }}
             className="text-neutral-400"
+            aria-label="Search"
           >
             {icons.find}
           </button>
