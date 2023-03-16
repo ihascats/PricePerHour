@@ -1,6 +1,6 @@
 import PriceDisplay from './priceDisplay';
 import { currencies } from '../data/currencies';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import ExchangeRate from './exchangeRate';
 
 export default function GameSelect({
@@ -12,6 +12,16 @@ export default function GameSelect({
   setHltbSelected,
   currency,
 }) {
+  useEffect(() => {
+    if (steamOptions?.length) {
+      steamGame.current.value = 0;
+    }
+    if (hltbOptions?.length) {
+      hltbSelectedElement.current.value = 0;
+    }
+  }, [steamOptions, hltbOptions]);
+
+  const hltbSelectedElement = useRef();
   const steamGame = useRef();
   return (
     <div className="p-2 bg-neutral-800 text-neutral-400 flex flex-col-reverse gap-3">
@@ -38,6 +48,7 @@ export default function GameSelect({
       <label className="flex flex-col font-mono text-sm">
         How long to beat{hltbOptions ? ` (${hltbOptions.length})` : null}:
         <select
+          ref={hltbSelectedElement}
           onChange={(event) => {
             setHltbSelected(hltbOptions[event.target.value]);
           }}
