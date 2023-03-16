@@ -52,14 +52,13 @@ export default function Steam() {
   async function getTitles(currency) {
     // If the length of the search term is less than 3 characters, exit the function
     if (gameTitle.current.value.length < 3) return;
+    const searchValue = gameTitle.current.value.toLowerCase();
 
     // Set loading to true
     setIsLoading(true);
 
     // Get an object containing an array of steam games that match the title
-    const objectAllGamesResponse = await findSteamMatch(
-      gameTitle.current.value.toLowerCase(),
-    );
+    const objectAllGamesResponse = await findSteamMatch(searchValue);
 
     // If theres no results clear the window
     if (!objectAllGamesResponse.arrayGames.length) {
@@ -70,7 +69,7 @@ export default function Steam() {
       setSteamImage();
     } else {
       // Fetch game data from the HLTB API using the search term
-      const hltbFetch = await fetch(`/api/hltb/${gameTitle.current.value}`);
+      const hltbFetch = await fetch(`/api/hltb/${searchValue}`);
 
       // Convert the HLTB data to JSON
       const hltbJson = await hltbFetch.json();
