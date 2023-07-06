@@ -56,8 +56,12 @@ export default function GameSelect({
         >
           {hltbOptions
             ? hltbOptions.map((game, index) => (
-                <option className="bg-neutral-900" key={game.id} value={index}>
-                  {game.name} ({game.id})
+                <option
+                  className="bg-neutral-900"
+                  key={game.game_id}
+                  value={index}
+                >
+                  {game.game_name} ({game.game_id})
                 </option>
               ))
             : null}

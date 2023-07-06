@@ -4,7 +4,8 @@ export default function Platforms({ hltbSelected }) {
       Platforms:
       <div className="flex flex-wrap gap-1 text-neutral-300">
         {hltbSelected
-          ? hltbSelected.platforms
+          ? hltbSelected.profile_platform
+              .split(', ')
               .sort(function (a, b) {
                 return a.length - b.length;
               })

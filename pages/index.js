@@ -75,11 +75,13 @@ export default function Steam() {
       const hltbJson = await hltbFetch.json();
 
       // Sort the HLTB data alphabetically by game title
-      hltbJson.response.sort((a, b) => a.name.length - b.name.length);
+      hltbJson.game_info.sort(
+        (a, b) => a.game_name.length - b.game_name.length,
+      );
 
       // Set the state for the HLTB options and selected game
-      setHltbOptions(hltbJson.response);
-      setHltbSelected(hltbJson.response[0]);
+      setHltbOptions(hltbJson.game_info);
+      setHltbSelected(hltbJson.game_info[0]);
 
       //
       // Set the state for the Steam options, fetch the price data, and set the image for the selected game
@@ -174,7 +176,7 @@ export default function Steam() {
             <div className="max-h-[230px] grid justify-center bg-neutral-800">
               <img
                 alt=""
-                src={hltbSelected.imageUrl}
+                src={`https://howlongtobeat.com/games/${hltbSelected.game_image}`}
                 className="bg-zinc-800 max-h-[230px]"
               ></img>
             </div>
